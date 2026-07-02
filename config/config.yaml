@@ -1,0 +1,63 @@
+# =========================================
+# Central configuration for the fine-tuning project
+# Change values here instead of editing code.
+# =========================================
+
+model:
+  base_model: "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit"   # swap to any Unsloth 4-bit model
+  max_seq_length: 2048
+  load_in_4bit: true
+  dtype: null   # null = auto-detect (bf16 on Ampere+, fp16 otherwise)
+
+lora:
+  r: 16                # LoRA rank — higher = more capacity, more VRAM
+  lora_alpha: 16        # scaling factor, common heuristic: alpha = r or 2*r
+  lora_dropout: 0.0
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+  bias: "none"
+  use_gradient_checkpointing: "unsloth"
+
+data:
+  dataset_name: "Abhaykoul/Ancient-Indian-Wisdom"  # replace with your domain dataset
+  raw_path: "data/raw/dataset.jsonl"
+  processed_train_path: "data/processed/train.jsonl"
+  processed_val_path: "data/processed/val.jsonl"
+  val_split_ratio: 0.1
+  instruction_field: "instruction"
+  response_field: "output"
+  seed: 3407
+
+training:
+  output_dir: "models/checkpoints"
+  final_adapter_dir: "models/final_adapter"
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 4
+  num_train_epochs: 3
+  learning_rate: 2.0e-4
+  warmup_steps: 10
+  logging_steps: 10
+  save_steps: 50
+  optim: "adamw_8bit"
+  weight_decay: 0.01
+  lr_scheduler_type: "linear"
+  train_on_responses_only: true
+
+evaluation:
+  eval_output_path: "logs/eval_results.json"
+  num_qualitative_samples: 10
+
+inference:
+  max_new_tokens: 256
+  temperature: 0.6
+  top_p: 0.9
+
+huggingface:
+  push_to_hub: false
+  repo_id: "your-username/your-model-name"   # set if push_to_hub: true
