@@ -25,13 +25,13 @@ lora:
   use_gradient_checkpointing: "unsloth"
 
 data:
-  dataset_name: "Abhaykoul/Ancient-Indian-Wisdom"  # replace with your domain dataset
+  dataset_name: "Bitext/Bitext-customer-support-llm-chatbot-training-dataset"  # replace with your domain dataset
   raw_path: "data/raw/dataset.jsonl"
   processed_train_path: "data/processed/train.jsonl"
   processed_val_path: "data/processed/val.jsonl"
   val_split_ratio: 0.1
   instruction_field: "instruction"
-  response_field: "output"
+  response_field: "response"
   seed: 3407
 
 training:
